@@ -409,25 +409,24 @@
                             });
                             gridModel2.ColumnCollection.Add(new ColumnProperty(nameof(StandardPermissionProvider.ContactCanPlaceOrders))
                             {
-                                Render = new RenderCheckBox("checkbox_ContactCanPlaceOrders") , //, new DataUrl("Edit")
-                                ClassName = NopColumnClassDefaults.CenterAll,
-                                Title = "ContactCanPlaceOrders",
+                                Render = new RenderCheckBox("checkbox_ContactCanPlaceOrders"),
+                                ClassName = NopColumnClassDefaults.Button,
+                                Title = "ContactCanPayOrders",
                                 Width = "200"
                             });
                             gridModel2.ColumnCollection.Add(new ColumnProperty(nameof(StandardPermissionProvider.ContactCanReOrder))
                             {
-                                Render = new RenderCheckBox("checkbox_ContactCanReOrder") ,
+                                Render = new RenderCheckBox("checkbox_ContactCanReOrder"),
                                 ClassName = NopColumnClassDefaults.CenterAll,
-                                Title = "ContactCanReOrder",
+                                Title = "ContactCanPayOrders",
                                 Width = "200"
                             });
                             gridModel2.ColumnCollection.Add(new ColumnProperty(nameof(StandardPermissionProvider.ContactCanSeeOrders))
                             {
                                 Render = new RenderCheckBox("checkbox_ContactCanSeeOrders"),
                                 ClassName = NopColumnClassDefaults.CenterAll,
-                                Title = "ContactCanSeeOrders",
-                                Width = "200",
-                                EditType = EditType.Checkbox
+                                Title = "ContactCanPayOrders",
+                                Width = "200"
                             });
                             gridModel2.ColumnCollection.Add(new ColumnProperty(nameof(StandardPermissionProvider.ContactCanPayOrders))
                             {
@@ -451,13 +450,16 @@
                                 Width = "200",
                             });
 
-                            //gridModel2.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Id))
-                            //{
-                            //    Title = T("Admin.Common.Edit").Text,
-                            //    Width = "100",
-                            //    ClassName = NopColumnClassDefaults.Button,
-                            //    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                            //});
+                            gridModel2.ColumnCollection.Add(
+                                   new ColumnProperty(nameof(CustomerModel.Id))
+                                    {
+                                        Title = "Save",
+                                        Width = "100",
+                                        ClassName = NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonEdit(new DataUrl("EditPermissions"))
+                                        //EditType = EditType.Checkbox
+                                    }
+                                  );
 
                         }
                         @await Html.PartialAsync("Table", gridModel2)

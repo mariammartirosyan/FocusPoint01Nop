@@ -511,6 +511,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        public virtual void EditPermissions(int id)
+        {
+            var customer = _customerService.GetCustomerById(id);
+            string aa = customer.SystemName;
+            aa = "";
+        }
+
         public virtual IActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
