@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "CustomerRoles Permissions", 
+  "SystemName": "CustomerRolesPermissions", 
+  "Version": "1.34",
+  "SupportedVersions": [ "4.20" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.CustomerRolesPermissions.dll",
+  "Description": "This plugin displays customer permissions"
+}

@@ -24,6 +24,7 @@ namespace Nop.Core.Domain.Security
         /// </summary>
         public string Category { get; set; }
 
+        public bool LimitedToStores { get; set; }
         /// <summary>
         /// Gets or sets the permission record-customer role mappings
         /// </summary>

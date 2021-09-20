@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -192,6 +192,8 @@ namespace Nop.Services.Security
         /// Install permissions
         /// </summary>
         /// <param name="permissionProvider">Permission provider</param>
+        /// 
+        //Doesn't add RoleMappings for ContactPermissions
         public virtual void InstallPermissions(IPermissionProvider permissionProvider)
         {
             //install new permissions
@@ -212,7 +214,6 @@ namespace Nop.Services.Security
                     SystemName = permission.SystemName,
                     Category = permission.Category
                 };
-
                 foreach (var defaultPermission in defaultPermissions)
                 {
                     var customerRole = _customerService.GetCustomerRoleBySystemName(defaultPermission.CustomerRoleSystemName);
@@ -240,6 +241,7 @@ namespace Nop.Services.Security
                         permission1.PermissionRecordCustomerRoleMappings.Add(new PermissionRecordCustomerRoleMapping { CustomerRole = customerRole });
                     }
                 }
+
 
                 //save new permission
                 InsertPermissionRecord(permission1);

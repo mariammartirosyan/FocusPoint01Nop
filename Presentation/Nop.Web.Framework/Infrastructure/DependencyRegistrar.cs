@@ -165,6 +165,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<CustomerReportService>().As<ICustomerReportService>().InstancePerLifetimeScope();
             builder.RegisterType<PermissionService>().As<IPermissionService>().InstancePerLifetimeScope();
             builder.RegisterType<AclService>().As<IAclService>().InstancePerLifetimeScope();
+            builder.RegisterType<ContactAclService>().As<IContactAclService>().InstancePerLifetimeScope();
             builder.RegisterType<PriceCalculationService>().As<IPriceCalculationService>().InstancePerLifetimeScope();
             builder.RegisterType<GeoLookupService>().As<IGeoLookupService>().InstancePerLifetimeScope();
             builder.RegisterType<CountryService>().As<ICountryService>().InstancePerLifetimeScope();

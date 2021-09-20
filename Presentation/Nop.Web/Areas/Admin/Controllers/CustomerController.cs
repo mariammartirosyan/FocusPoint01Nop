@@ -13,6 +13,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -30,6 +31,7 @@ using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Customers;
+using Nop.Web.Areas.Admin.Models.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
@@ -65,13 +67,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly IRewardPointService _rewardPointService;
+        private readonly ISecurityModelFactory _securityModelFactory;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly ITaxService _taxService;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly TaxSettings _taxSettings;
-
+        private readonly IContactAclService _contactAclService;
         #endregion
 
         #region Ctor
@@ -101,12 +104,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPermissionService permissionService,
             IQueuedEmailService queuedEmailService,
             IRewardPointService rewardPointService,
+            ISecurityModelFactory securityModelFactory,
             IStoreContext storeContext,
             IStoreService storeService,
             ITaxService taxService,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings, IContactAclService contactAclService)
         {
             _customerSettings = customerSettings;
             _dateTimeSettings = dateTimeSettings;
@@ -133,12 +137,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             _permissionService = permissionService;
             _queuedEmailService = queuedEmailService;
             _rewardPointService = rewardPointService;
+            _securityModelFactory = securityModelFactory;
             _storeContext = storeContext;
             _storeService = storeService;
             _taxService = taxService;
             _workContext = workContext;
             _workflowMessageService = workflowMessageService;
             _taxSettings = taxSettings;
+            _contactAclService = contactAclService;
         }
 
         #endregion
@@ -271,35 +277,49 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual IActionResult List()
         {
+            _permissionService.InstallPermissions(new StandardPermissionProvider());
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _customerModelFactory.PrepareCustomerSearchModel(new CustomerSearchModel());
+            var customerSearchModel = _customerModelFactory.PrepareCustomerSearchModel(new CustomerSearchModel());
+         
 
+
+           List<int> idList = customerSearchModel.AvailableCustomerRoles.Where(role => role.Text.Contains("@")).Select(role1 => Convert.ToInt32(role1.Value)).ToList();
+
+
+            var customerRolePermissionsModel = new CustomerRolePermissionsModel()
+            { contactRolePermissionsList = _contactAclService.GetContactPermissionRecords(idList)
+            };
+         
+
+            var customers = _customerService.GetAllCustomers();
+
+            var model = new CustomersAndRolePermissions()
+            {
+                CustomerSearchModel = customerSearchModel,
+
+                CustomerRolePermissionsModel = customerRolePermissionsModel
+            };
+            
+              
+            
             return View(model);
         }
 
         [HttpPost]
         public virtual IActionResult CustomerList(CustomerSearchModel searchModel)
         {
+            
+
+            
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _customerModelFactory.PrepareCustomerListModel(searchModel);
-
-            return Json(model);
-        }
-
-        public virtual IActionResult CustomerPermissionsList(CustomerSearchModel searchModel)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedDataTablesJson();
-
-            //prepare model
-            var model = _customerModelFactory.PrepareCustomerListModel(searchModel);
-
+            
             return Json(model);
         }
 
@@ -511,11 +531,30 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public virtual void EditPermissions(int id)
+        public virtual void SavePermissions(int id)
         {
+         //  _permissionService.InstallPermissions(new StandardPermissionProvider());
+
             var customer = _customerService.GetCustomerById(id);
-            string aa = customer.SystemName;
-            aa = "";
+            string customerEmail = customer.Email;
+            CustomerRole customerRole = null;
+            var customerRoleExists = customer.CustomerRoles.Any(r => r.SystemName == customer.Email || r.Name == customer.Email);
+            var customerRole2= customer.CustomerRoles.Select(r => r.SystemName == customer.Email || r.Name == customer.Email).FirstOrDefault();
+            if (!customerRoleExists)
+            {
+                customerRole = new CustomerRole
+                {
+                    Name = customer.Email,
+                    Active = true,
+                    SystemName = customer.Email
+                };
+                _customerService.InsertCustomerRole(customerRole);
+            }
+            string permissionSystemName = "ContactCanPlaceOrders";
+            // _permissionService.GetAllPermissionRecords().Any()
+            var permission = _permissionService.GetPermissionRecordBySystemName(permissionSystemName);
+            permission.PermissionRecordCustomerRoleMappings.Add(new PermissionRecordCustomerRoleMapping { CustomerRole = customerRole});
+
         }
 
         public virtual IActionResult Edit(int id)

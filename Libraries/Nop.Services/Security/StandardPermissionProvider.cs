@@ -63,12 +63,12 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord PublicStoreAllowNavigation = new PermissionRecord { Name = "Public store. Allow navigation", SystemName = "PublicStoreAllowNavigation", Category = "PublicStore" };
         public static readonly PermissionRecord AccessClosedStore = new PermissionRecord { Name = "Public store. Access a closed store", SystemName = "AccessClosedStore", Category = "PublicStore" };
 
-        public static readonly PermissionRecord ContactCanPlaceOrders = new PermissionRecord { Name = "Public store. Contact Can Place Orders", SystemName = "ContactCanPlaceOrders", Category = "PublicStore" };
-        public static readonly PermissionRecord ContactCanReOrder = new PermissionRecord { Name = "Public store. Contact Can Re-Order", SystemName = "ContactCanReOrder", Category = "PublicStore" };
-        public static readonly PermissionRecord ContactCanSeeOrders = new PermissionRecord { Name = "Public store. Contact Can See Orders", SystemName = "ContactCanSeeOrders", Category = "PublicStore" };
-        public static readonly PermissionRecord ContactCanPayOrders = new PermissionRecord { Name = "Public store. Contact Can Pay Orders", SystemName = "ContactCanPayOrders", Category = "PublicStore" };
-        public static readonly PermissionRecord ContactCanSeeInvoices = new PermissionRecord { Name = "Public store. Contact Can See Invoices", SystemName = "ContactCanSeeInvoices", Category = "PublicStore" };
-        public static readonly PermissionRecord ContactCanPayInvoices = new PermissionRecord { Name = "Public store. Contact Can Pay Invoices", SystemName = "ContactCanPayInvoices", Category = "PublicStore" };
+        public static readonly PermissionRecord ContactCanPlaceOrders = new PermissionRecord { Name = "Public store. Contact Can Place Orders", SystemName = "ContactCanPlaceOrders", Category = "PublicStore", LimitedToStores = false};
+        public static readonly PermissionRecord ContactCanReOrder = new PermissionRecord { Name = "Public store. Contact Can Re-Order", SystemName = "ContactCanReOrder", Category = "PublicStore", LimitedToStores = false };
+        public static readonly PermissionRecord ContactCanSeeOrders = new PermissionRecord { Name = "Public store. Contact Can See Orders", SystemName = "ContactCanSeeOrders", Category = "PublicStore", LimitedToStores = false };
+        public static readonly PermissionRecord ContactCanPayOrders = new PermissionRecord { Name = "Public store. Contact Can Pay Orders", SystemName = "ContactCanPayOrders", Category = "PublicStore", LimitedToStores = false };
+        public static readonly PermissionRecord ContactCanSeeInvoices = new PermissionRecord { Name = "Public store. Contact Can See Invoices", SystemName = "ContactCanSeeInvoices", Category = "PublicStore", LimitedToStores = false };
+        public static readonly PermissionRecord ContactCanPayInvoices = new PermissionRecord { Name = "Public store. Contact Can Pay Invoices", SystemName = "ContactCanPayInvoices", Category = "PublicStore", LimitedToStores = false };
 
 
         /// <summary>
@@ -128,7 +128,13 @@ namespace Nop.Services.Security
                 EnableShoppingCart,
                 EnableWishlist,
                 PublicStoreAllowNavigation,
-                AccessClosedStore
+                AccessClosedStore,
+                ContactCanPlaceOrders,
+                ContactCanReOrder,
+                ContactCanSeeOrders,
+                ContactCanPayOrders,
+                ContactCanSeeInvoices,
+                ContactCanPayInvoices
             };
         }
 
